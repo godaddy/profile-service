@@ -4,17 +4,14 @@
   "description": "",
   "main": "./src/index.js",
   "dependencies": {
-    "body-parser": "^1.12.2",
-    "bson": "^0.4.23",
-    "cors": "^2.8.3",
-    "escape-string-regexp": "1.0.5",
-    "express": "^4.12.3",
-    "lodash": "4.17.2",
-    "minimist": "^1.1.1",
+    "body-parser": "^1.19.0",
+    "bson": "^4.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "mongo-sanitize": "^1.0.1",
-    "mongoose": "^5.6.11",
-    "swagger-jsdoc": "^1.9.6",
-    "swagger-ui-express": "^2.0.2"
+    "mongoose": "^5.7.3",
+    "swagger-jsdoc": "^3.4.0",
+    "swagger-ui-express": "^4.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
@@ -22,15 +19,14 @@
     "@babel/polyfill": "^7.6.0",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
-    "axios": "^0.18.0",
     "babel-loader": "^8.0.6",
-    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-add-module-exports": "^1.0.2",
     "eslint": "^6.5.1",
     "eslint-config-godaddy": "^4.0.0",
     "eslint-plugin-json": "^1.4.0",
     "eslint-plugin-mocha": "^6.1.1",
-    "mocha": "^5.2.0",
-    "mockgoose": "^7.3.5",
+    "mocha": "^6.2.1",
+    "mockgoose": "^8.0.3",
     "nyc": "^14.1.1"
   },
   "scripts": {

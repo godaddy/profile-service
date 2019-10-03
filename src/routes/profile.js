@@ -1,5 +1,6 @@
 /* eslint-disable valid-jsdoc */
 import Profile from '../models/profile';
+import sanitize from 'mongo-sanitize';
 
 /**
  * @swagger
@@ -99,8 +100,8 @@ function get({ query }, res, cb) {
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
 function getBy({ params }, res, cb) {
-  const key = `meta.${params.key}`;
-  const value = params.value;
+  const key = `meta.${sanitize(params.key)}`;
+  const value = sanitize(params.value);
   Profile.findOne({ [key]: value }, (err, profile) => {
     if (err) {
       res.statusCode = 500;
@@ -149,7 +150,7 @@ function getBy({ params }, res, cb) {
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
 function getOne({ params }, res, cb) {
-  Profile.findById(params.id, (err, profile) => {
+  Profile.findById(sanitize(params.id), (err, profile) => {
     if (err) {
       res.statusCode = 500;
       res.json({
@@ -189,7 +190,7 @@ function getOne({ params }, res, cb) {
  */
 function getAll({ params, query }, res, cb) {
   Profile.find({
-    name: params.name
+    name: sanitize(params.name)
   }, (err, profiles) => {
     if (err) {
       res.statusCode = 500;
@@ -235,7 +236,7 @@ function getAll({ params, query }, res, cb) {
  */
 function getNext({ params }, res, cb) {
   Profile.findOneAndUpdate({
-    name: params.name,
+    name: sanitize(params.name),
     locked: false
   }, {
     locked: true,
@@ -303,7 +304,7 @@ function releaseOne({ query, params }, res, cb) {
     };
   }
 
-  Profile.findByIdAndUpdate(params.id, d, {}, (err, result) => {
+  Profile.findByIdAndUpdate(sanitize(params.id), d, {}, (err, result) => {
     if (err) {
       res.statusCode = 500;
       res.json({
@@ -341,7 +342,7 @@ function releaseOne({ query, params }, res, cb) {
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
 function deleteOne({ params }, res, cb) {
-  Profile.findByIdAndRemove(params.id, (err, result) => {
+  Profile.findByIdAndRemove(sanitize(params.id), (err, result) => {
     if (err) {
       res.statusCode = 500;
       res.json({
@@ -382,7 +383,7 @@ function deleteOne({ params }, res, cb) {
  */
 function deleteAll({ params }, res, cb) {
   Profile.deleteMany({
-    name: params.name
+    name: sanitize(params.name)
   }, (err, result) => {
     if (err) {
       res.statusCode = 500;
@@ -423,7 +424,7 @@ function deleteAll({ params }, res, cb) {
  */
 function releaseAll({ params }, res, cb) {
   Profile.updateMany({
-    name: params.name,
+    name: sanitize(params.name),
     locked: true
   }, {
     locked: false,
@@ -479,7 +480,7 @@ function releaseAll({ params }, res, cb) {
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
 function add(req, res, cb) {
-  if (Array.isArray(req.body)) {
+  if (Array.isArray(sanitize(req.body))) {
     addBulk(req, res, cb);
   } else {
     addOne(req, res, cb);
@@ -488,9 +489,9 @@ function add(req, res, cb) {
 
 function addOne({ params, body }, res, cb) {
   const profile = new Profile({
-    name: params.name,
+    name: sanitize(params.name),
     locked: false,
-    meta: body
+    meta: sanitize(body)
   });
   profile.save((err, savedProfile) => {
     if (err) {
@@ -507,8 +508,8 @@ function addOne({ params, body }, res, cb) {
 }
 
 function addBulk({ body, params }, res, cb) {
-  const d = body.map(i => ({
-    name: params.name,
+  const d = sanitize(body).map(i => ({
+    name: sanitize(params.name),
     locked: false,
     meta: i
   }));
@@ -563,9 +564,9 @@ function addBulk({ body, params }, res, cb) {
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
 function updateOne({ body, params }, res, cb) {
-  const d = { meta: body };
+  const d = { meta: sanitize(body) };
   Profile.findOneAndUpdate({
-    _id: params.id
+    _id: sanitize(params.id)
   }, d, (err, profile) => {
     if (err) {
       res.statusCode = 500;

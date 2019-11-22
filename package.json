@@ -1,8 +1,13 @@
 {
   "name": "profile-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lock meta data to prevent concurrency issues between tests",
   "main": "./src/index.js",
+  "keywords": [
+    "test",
+    "profile",
+    "concurrency"
+  ],
   "dependencies": {
     "body-parser": "^1.19.0",
     "bson": "^4.0.2",
@@ -30,7 +35,7 @@
     "nyc": "^14.1.1"
   },
   "scripts": {
-    "cicd-build": "babel src --out-dir lib",
+    "build": "babel src --out-dir lib",
     "lint": "eslint src test",
     "test": "npm run lint && npm run unit",
     "unit": "NODE_ENV=dev nyc --reporter=cobertura --reporter=html --reporter=text mocha --timeout 30000 --exit --require @babel/polyfill --require @babel/register test/unit/**/*.js",

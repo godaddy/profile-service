@@ -1,8 +1,10 @@
 # Profile Service
 
-The purpose of the profile service is to provide locked data to be used by the tests. This allows you to avoid concurrency issues. You store multiple profile entries meta data inside of the service (MongoDB backend), then when you run your test, you call the service which claims/locks one of those profile entries so that another test can't use it. Each profile entry will automatically unlock after 10 minutes whether you explicitly unlock it or not.
+The purpose of the profile service is to provide locked data to be used by the tests. This allows you to avoid concurrency issues. You store multiple profile entries (each gets their own profileId) meta data inside of the service (MongoDB backend), then when you run your test, you call the service which claims/locks one of those profile entries (profileId) so that another test can't use it. Each profile entry will automatically unlock after 10 minutes whether you explicitly unlock it or not.
 
 You do not need to create a profile before adding entries to it. You simply need to add a profile entry to a specific profile name, and that profile entry will get added for that specific profile name.
+
+If you do not explicitly release a profile entry, it will be released after 10 minutes automatically.
 
 ## Configuration
 
@@ -43,7 +45,7 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
 After starting MongoDB, you can start the profile service:  
 ```
-npm run cicd-build
+npm run build
 npm run start
 ```
 
@@ -58,44 +60,56 @@ npm run start
 
 Sample in javascript:
 
-* First `npm install axios`
+* First `npm install node-fetch`
 
 ``` javascript
-const axios = require('axios');
+const fetch = require('node-fetch');
 
 const profileServiceUrl = 'http://localhost:8080';
 
 // 1st API request - Add data to profile in the profile service.
 // This will be done prior to your tests running.
+// Each profileName can have multiple profileIds (entries)
 async function addToProfile(profileName, profileData) {
-  return axios.post(`${profileServiceUrl}/profile/${profileName}`, profileData);
+  const res = await fetch(`${profileServiceUrl}/profile/${profileName}`, {
+    method: 'POST',
+    body: JSON.stringify(profileData),
+    headers: { 'Content-Type': 'application/json' }
+  });
+  return await res.json();
 }
 
 // 2nd API request - Retrieves an object from the profile service.
 // This will lock that profile so another test can not use it.
+// Each profileName can have multiple profileIds (entries)
 async function getProfile(profileName) {
-  return axios.get(`${profileServiceUrl}/profile/${profileName}/next`);
+  const res = await fetch(`${profileServiceUrl}/profile/${profileName}/next`);
+  return await res.json();
 }
 
 // 3rd API request - Releases profile lock, so another test can get this profile.
+// Each profileName can have multiple profileIds (entries)
 async function releaseProfile(profileId) {
-  return axios.post(`${profileServiceUrl}/profile/${profileId}/release`);
+  const res = await fetch(`${profileServiceUrl}/profile/${profileId}/release`, {
+    method: 'POST'
+  });
+  return await res.json();
 }
 
 async function main() {
-  const profileName = encodeURIComponent(process.env.PROFILE_NAME);
+  const profileName = 'test-profile';
   const profileData = {
-    username: 'myTestUserNamne',
+    username: 'myTestUserName',
     password: 'myTestPassword1'
   };
 
   let r = await addToProfile(profileName, profileData);
-  console.log(`Response from adding to profile : ${JSON.stringify(r.data, null, 2)}`);
+  console.log(`Response from adding to profile : ${JSON.stringify(r, null, 2)}`);
   r = await getProfile(profileName);
-  console.log(`Response from getting profile : ${JSON.stringify(r.data, null, 2)}`);
-  const profileId = r.data._id;
+  console.log(`Response from getting profile : ${JSON.stringify(r, null, 2)}`);
+  const profileId = r._id;
   r = await releaseProfile(profileId);
-  console.log(`Response from releasing profile : ${JSON.stringify(r.data, null, 2)}`);
+  console.log(`Response from releasing profile : ${JSON.stringify(r, null, 2)}`);
 }
 
 main();

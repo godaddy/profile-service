@@ -94,8 +94,8 @@ function get({ query }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
+ *       404:
+ *        description: A record was not found.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
@@ -111,7 +111,7 @@ function getBy({ params }, res, cb) {
       if (cb) return cb();
     }
     if (profile === null) {
-      res.statusCode = 200;
+      res.statusCode = 404;
       res.json({
         message: 'Record not found!'
       });
@@ -175,7 +175,7 @@ function getOne({ params }, res, cb) {
  *       - application/json
  *     parameters:
  *       - name: name
- *         description: The name of the profile from where you want to fetch the profile entries for
+ *         description: The name of the profile from where you want to fetch the profile entries
  *         in: path
  *         required: true
  *         type: string
@@ -229,8 +229,8 @@ function getAll({ params, query }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
+ *       404:
+ *        description: A record was not found.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
@@ -256,8 +256,10 @@ function getNext({ params }, res, cb) {
       res.json(r);
       if (cb) return cb();
     } else {
-      res.statusCode = 200;
-      res.json(null);
+      res.statusCode = 404;
+      res.json({
+        message: 'Record not found!'
+      });
       if (cb) return cb();
     }
   });

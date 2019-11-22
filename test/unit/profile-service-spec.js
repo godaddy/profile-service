@@ -92,8 +92,8 @@ describe('Profile Service', () => {
   it('[getNext] get next profile entry when no results returns null', done => {
     req.params = { name: profileName };
     profileService.getNext(req, res, () => {
-      assert.equal(res.statusCode, 200);
-      assert.equal(res.json, null);
+      assert.equal(res.statusCode, 404);
+      assert.equal(res.json.message, 'Record not found!');
       done();
     });
   });
@@ -400,7 +400,7 @@ describe('Profile Service', () => {
       };
 
       profileService.getBy(req, res, () => {
-        assert.equal(res.statusCode, 200);
+        assert.equal(res.statusCode, 404);
         assert.equal(res.json.message, 'Record not found!');
 
         done();
@@ -419,7 +419,7 @@ describe('Profile Service', () => {
       };
 
       profileService.getBy(req, res, () => {
-        assert.equal(res.statusCode, 200);
+        assert.equal(res.statusCode, 404);
         assert.equal(res.json.message, 'Record not found!');
 
         done();

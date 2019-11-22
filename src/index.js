@@ -30,4 +30,6 @@ export default {
   stop
 };
 
-start({});
+if (!module.parent) {
+  start({});
+}

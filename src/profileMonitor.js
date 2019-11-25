@@ -1,4 +1,4 @@
-import Profile from './models/profile';
+const Profile = require('./models/profile');
 
 function start({ unlockProfileMs }) {
   setInterval(() => {
@@ -16,6 +16,6 @@ function start({ unlockProfileMs }) {
   }, 60000).unref();
 }
 
-export default {
+module.exports = {
   start
 };

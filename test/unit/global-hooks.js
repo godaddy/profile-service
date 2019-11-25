@@ -1,6 +1,5 @@
-import mongoose from 'mongoose';
-import { Mockgoose } from 'mockgoose';
-
+const mongoose = require('mongoose');
+const Mockgoose = require('mockgoose').Mockgoose;
 const mockgoose = new Mockgoose(mongoose);
 
 before(async () => {

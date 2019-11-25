@@ -45,7 +45,6 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
 After starting MongoDB, you can start the profile service:  
 ```
-npm run build
 npm run start
 ```
 

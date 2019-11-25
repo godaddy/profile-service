@@ -1,5 +1,5 @@
-import profileService from '../../src/routes/profile';
-import assert from 'assert';
+const profileService = require('../../src/routes/profile');
+const assert = require('assert');
 
 describe('Profile Service', () => {
   let profileName;

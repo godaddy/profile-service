@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
-import app from './app';
-import sanitize from 'mongo-sanitize';
-import profileMonitor from './profileMonitor';
+const mongoose = require('mongoose');
+const app = require('./app');
+const sanitize = require('mongo-sanitize');
+const profileMonitor = require('./profileMonitor');
 let server;
 
 function start(opts) {
@@ -25,7 +25,7 @@ function stop() {
   if (server) server.close();
 }
 
-export default {
+module.exports = {
   start,
   stop
 };

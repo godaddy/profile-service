@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const profileSchema = mongoose.Schema({ // eslint-disable-line new-cap
@@ -11,4 +11,4 @@ const profileSchema = mongoose.Schema({ // eslint-disable-line new-cap
   disabled: Boolean
 });
 
-export default mongoose.model('Profile', profileSchema);
+module.exports = mongoose.model('Profile', profileSchema);

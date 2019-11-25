@@ -19,12 +19,6 @@
     "swagger-ui-express": "^4.1.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.2",
-    "@babel/core": "^7.6.2",
-    "@babel/polyfill": "^7.6.0",
-    "@babel/preset-env": "^7.6.2",
-    "@babel/register": "^7.6.2",
-    "babel-plugin-add-module-exports": "^1.0.2",
     "eslint": "^6.5.1",
     "eslint-config-godaddy": "^4.0.0",
     "eslint-plugin-json": "^1.4.0",
@@ -34,11 +28,10 @@
     "nyc": "^14.1.1"
   },
   "scripts": {
-    "build": "babel src --out-dir lib",
     "lint": "eslint src test",
     "test": "npm run lint && npm run unit",
-    "unit": "NODE_ENV=dev nyc --reporter=cobertura --reporter=html --reporter=text mocha --timeout 30000 --exit --require @babel/polyfill --require @babel/register test/unit/**/*.js",
-    "start": "node lib/index.js"
+    "unit": "NODE_ENV=dev nyc --reporter=cobertura --reporter=html --reporter=text mocha --timeout 30000 --exit test/unit/**/*.js",
+    "start": "node src/index.js"
   },
   "author": "GoDaddy Operating Company, LLC",
   "license": "MIT"

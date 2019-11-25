@@ -1,11 +1,11 @@
-import diagnostic from './diagnostic';
-import profile from './profile';
+const diagnostic = require('./diagnostic');
+const profile = require('./profile');
 
 function register(app) {
   diagnostic.register(app);
   profile.register(app);
 }
 
-export default {
+module.exports = {
   register
 };

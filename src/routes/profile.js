@@ -1,6 +1,6 @@
 /* eslint-disable valid-jsdoc */
-import Profile from '../models/profile';
-import sanitize from 'mongo-sanitize';
+const Profile = require('../models/profile');
+const sanitize = require('mongo-sanitize');
 
 /**
  * @swagger
@@ -598,7 +598,7 @@ function register(app) {
   app.delete('/profile/:name/deleteAll', deleteAll);
 }
 
-export default {
+module.exports = {
   register,
   add,
   get,

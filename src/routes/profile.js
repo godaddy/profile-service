@@ -249,6 +249,8 @@ function getAll({ params, query }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
+ *       400:
+ *        description: The required input parameters were NOT provided.
  *       404:
  *        description: A record was not found.
  *       500:

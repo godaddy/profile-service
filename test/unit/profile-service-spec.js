@@ -19,7 +19,7 @@ describe('Profile Service', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200);
-    const body = JSON.parse(response.text); // TODO: Why do I need to parse the text ?
+    const body = JSON.parse(response.text);
 
     assert.equal(body.name, profileName);
     assert.equal(body.locked, false);

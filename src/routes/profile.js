@@ -17,7 +17,7 @@ const sanitize = require('mongo-sanitize');
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function get({ query }, res, cb) {
+function get({ query }, res) {
   let qCnt = 0;
   let f = {};
   let detail = false;
@@ -45,24 +45,20 @@ function get({ query }, res, cb) {
   Profile.find(f, fields, (err, profiles) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     if (detail === 'id') {
       const d = profiles.map(({ _id }) => _id);
-      res.json(d);
-      if (cb) return cb();
+      return res.json(d);
     } else if (detail) {
       res.statusCode = 200;
-      res.json(profiles);
-      if (cb) return cb();
+      return res.json(profiles);
     } else {
       const d = profiles.map(({ meta }) => meta);
       res.statusCode = 200;
-      res.json(d);
-      if (cb) return cb();
+      return res.json(d);
     }
   });
 }
@@ -92,41 +88,29 @@ function get({ query }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       404:
  *        description: A record was not found.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function getBy({ params }, res, cb) {
-  if (!params.key || !params.value) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (key or value).'
-    });
-    if (cb) return cb();
-  }
+function getBy({ params }, res) {
   const key = `meta.${sanitize(params.key)}`;
   const value = sanitize(params.value);
   Profile.findOne({ [key]: value }, (err, profile) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     if (profile === null) {
       res.statusCode = 404;
-      res.json({
+      return res.json({
         message: 'Record not found!'
       });
-      if (cb) return cb();
     } else {
       res.statusCode = 200;
-      res.json(profile);
-      if (cb) return cb();
+      return res.json(profile);
     }
   });
 }
@@ -150,30 +134,19 @@ function getBy({ params }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function getOne({ params }, res, cb) {
-  if (!params.id) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (id).'
-    });
-    if (cb) return cb();
-  }
+function getOne({ params }, res) {
   Profile.findById(sanitize(params.id), (err, profile) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     res.statusCode = 200;
-    res.json(profile);
-    if (cb) return cb();
+    return res.json(profile);
   });
 }
 
@@ -196,36 +169,24 @@ function getOne({ params }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function getAll({ params, query }, res, cb) {
-  if (!params.name) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (name).'
-    });
-    if (cb) return cb();
-  }
+function getAll({ params, query }, res) {
   Profile.find({
     name: sanitize(params.name)
   }, (err, profiles) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     if (query && query.detail) {
-      res.json(profiles);
-      if (cb) return cb();
+      return res.json(profiles);
     } else {
       const d = profiles.map(({ meta }) => meta);
-      res.json(d);
-      if (cb) return cb();
+      return res.json(d);
     }
   });
 }
@@ -249,21 +210,12 @@ function getAll({ params, query }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       404:
  *        description: A record was not found.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function getNext({ params }, res, cb) {
-  if (!params.name) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (name).'
-    });
-    if (cb) return cb();
-  }
+function getNext({ params }, res) {
   Profile.findOneAndUpdate({
     name: sanitize(params.name),
     locked: false
@@ -273,23 +225,20 @@ function getNext({ params }, res, cb) {
   }, {}, (updateErr, result) => {
     if (updateErr) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: updateErr
       });
-      if (cb) return cb();
     }
     if (result) {
       const r = Object.assign({}, result.meta);
       r._id = result._id;
       res.statusCode = 200;
-      res.json(r);
-      if (cb) return cb();
+      return res.json(r);
     } else {
       res.statusCode = 404;
-      res.json({
+      return res.json({
         message: 'Record not found!'
       });
-      if (cb) return cb();
     }
   });
 }
@@ -313,19 +262,10 @@ function getNext({ params }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function releaseOne({ query, params }, res, cb) {
-  if (!params.id) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (id).'
-    });
-    if (cb) return cb();
-  }
+function releaseOne({ query, params }, res) {
   const d = {
     locked: false,
     locked_dt: null
@@ -345,13 +285,11 @@ function releaseOne({ query, params }, res, cb) {
   Profile.findByIdAndUpdate(sanitize(params.id), d, {}, (err, result) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
-    res.json(result);
-    if (cb) return cb();
+    return res.json(result);
   });
 }
 
@@ -374,30 +312,19 @@ function releaseOne({ query, params }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function deleteOne({ params }, res, cb) {
-  if (!params.id) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (id).'
-    });
-    if (cb) return cb();
-  }
+function deleteOne({ params }, res) {
   Profile.findByIdAndRemove(sanitize(params.id), (err, result) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     res.statusCode = 200;
-    res.json(result);
-    if (cb) return cb();
+    return res.json(result);
   });
 }
 
@@ -421,32 +348,21 @@ function deleteOne({ params }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function deleteAll({ params }, res, cb) {
-  if (!params.name) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (name).'
-    });
-    if (cb) return cb();
-  }
+function deleteAll({ params }, res) {
   Profile.deleteMany({
     name: sanitize(params.name)
   }, (err, result) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     res.statusCode = 200;
-    res.json(result);
-    if (cb) return cb();
+    return res.json(result);
   });
 }
 
@@ -469,19 +385,10 @@ function deleteAll({ params }, res, cb) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function releaseAll({ params }, res, cb) {
-  if (!params.name) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (name).'
-    });
-    if (cb) return cb();
-  }
+function releaseAll({ params }, res) {
   Profile.updateMany({
     name: sanitize(params.name),
     locked: true
@@ -491,14 +398,12 @@ function releaseAll({ params }, res, cb) {
   }, (err, results) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     res.statusCode = 200;
-    res.json(results);
-    if (cb) return cb();
+    return res.json(results);
   });
 }
 
@@ -533,27 +438,18 @@ function releaseAll({ params }, res, cb) {
  *     responses:
  *       201:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided or the payload sent is incorrect.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function add(req, res, cb) {
-  if (!req.params.name) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (name).'
-    });
-    if (cb) return cb();
-  }
+function add(req, res) {
   if (Array.isArray(sanitize(req.body))) {
-    addBulk(req, res, cb);
+    return addBulk(req, res);
   } else {
-    addOne(req, res, cb);
+    return addOne(req, res);
   }
 }
 
-function addOne({ params, body }, res, cb) {
+function addOne({ params, body }, res) {
   const profile = new Profile({
     name: sanitize(params.name),
     locked: false,
@@ -562,18 +458,16 @@ function addOne({ params, body }, res, cb) {
   profile.save((err, savedProfile) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     res.statusCode = 200;
-    res.json(savedProfile);
-    if (cb) return cb();
+    return res.json(savedProfile);
   });
 }
 
-function addBulk({ body, params }, res, cb) {
+function addBulk({ body, params }, res) {
   const d = sanitize(body).map(i => ({
     name: sanitize(params.name),
     locked: false,
@@ -582,14 +476,12 @@ function addBulk({ body, params }, res, cb) {
   Profile.create(d, (err, profiles) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     res.statusCode = 200;
-    res.json(profiles);
-    if (cb) return cb();
+    return res.json(profiles);
   });
 }
 
@@ -624,33 +516,22 @@ function addBulk({ body, params }, res, cb) {
  *     responses:
  *       201:
  *        description: All OK! Route execution was successful and response was returned.
- *       400:
- *        description: The required input parameters were NOT provided or the payload sent is incorrect.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
-function updateOne({ body, params }, res, cb) {
-  if (!params.id) {
-    res.statusCode = 400;
-    res.json({
-      message: 'Required fields missing (id).'
-    });
-    if (cb) return cb();
-  }
+function updateOne({ body, params }, res) {
   const d = { meta: sanitize(body) };
   Profile.findOneAndUpdate({
     _id: sanitize(params.id)
   }, d, (err, profile) => {
     if (err) {
       res.statusCode = 500;
-      res.json({
+      return res.json({
         error: err
       });
-      if (cb) return cb();
     }
     res.statusCode = 201;
-    res.json(profile);
-    if (cb) return cb();
+    return res.json(profile);
   });
 }
 

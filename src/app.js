@@ -21,5 +21,6 @@ function listen(requestedPort) {
 }
 
 module.exports = {
+  app, // for tests
   listen
 };

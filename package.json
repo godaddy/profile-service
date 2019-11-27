@@ -25,7 +25,8 @@
     "eslint-plugin-mocha": "^6.1.1",
     "mocha": "^6.2.1",
     "mockgoose": "^8.0.3",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "supertest": "^4.0.2"
   },
   "scripts": {
     "lint": "eslint src test",

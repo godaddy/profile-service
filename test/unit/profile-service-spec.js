@@ -376,5 +376,6 @@ async function addProfileEntry(isLocked = false, data = { username: username, pa
     return p._id;
   } catch (err) {
     console.log(`Unable to save profile entry : ${err}`);
+    throw err;
   }
 }

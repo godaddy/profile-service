@@ -11,5 +11,5 @@ before(async () => {
 });
 
 afterEach(() => {
-  mockgoose.helper.reset();
+  return mockgoose.helper.reset();
 });

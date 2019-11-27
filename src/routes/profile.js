@@ -55,11 +55,10 @@ function get({ query }, res) {
     } else if (detail) {
       res.statusCode = 200;
       return res.json(profiles);
-    } else {
-      const d = profiles.map(({ meta }) => meta);
-      res.statusCode = 200;
-      return res.json(d);
     }
+    const d = profiles.map(({ meta }) => meta);
+    res.statusCode = 200;
+    return res.json(d);
   });
 }
 
@@ -108,10 +107,9 @@ function getBy({ params }, res) {
       return res.json({
         message: 'Record not found!'
       });
-    } else {
-      res.statusCode = 200;
-      return res.json(profile);
     }
+    res.statusCode = 200;
+    return res.json(profile);
   });
 }
 
@@ -184,10 +182,9 @@ function getAll({ params, query }, res) {
     }
     if (query && query.detail) {
       return res.json(profiles);
-    } else {
-      const d = profiles.map(({ meta }) => meta);
-      return res.json(d);
     }
+    const d = profiles.map(({ meta }) => meta);
+    return res.json(d);
   });
 }
 
@@ -234,12 +231,11 @@ function getNext({ params }, res) {
       r._id = result._id;
       res.statusCode = 200;
       return res.json(r);
-    } else {
-      res.statusCode = 404;
-      return res.json({
-        message: 'Record not found!'
-      });
     }
+    res.statusCode = 404;
+    return res.json({
+      message: 'Record not found!'
+    });
   });
 }
 
@@ -444,9 +440,8 @@ function releaseAll({ params }, res) {
 function add(req, res) {
   if (Array.isArray(sanitize(req.body))) {
     return addBulk(req, res);
-  } else {
-    return addOne(req, res);
   }
+  return addOne(req, res);
 }
 
 function addOne({ params, body }, res) {

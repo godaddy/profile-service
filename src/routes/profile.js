@@ -132,6 +132,8 @@ function getBy({ params }, res) {
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
+ *       404:
+ *        description: A record was not found.
  *       500:
  *        description: Internal server error occurred. Please create an issue on github repo.
  */
@@ -141,6 +143,12 @@ function getOne({ params }, res) {
       res.statusCode = 500;
       return res.json({
         error: err
+      });
+    }
+    if (profile === null) {
+      res.statusCode = 404;
+      return res.json({
+        message: 'Record not found!'
       });
     }
     res.statusCode = 200;

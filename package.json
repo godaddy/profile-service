@@ -30,7 +30,8 @@
   },
   "scripts": {
     "lint": "eslint src test",
-    "test": "npm run lint && npm run unit",
+    "pretest": "npm run lint",
+    "test": "npm run unit",
     "unit": "NODE_ENV=dev nyc --reporter=cobertura --reporter=html --reporter=text mocha --timeout 30000 --exit test/unit/**/*.js",
     "start": "node src/index.js"
   },

@@ -108,6 +108,25 @@ describe('Profile Service', () => {
     assert.equal(body.meta.password, password);
   });
 
+  it('[getOne] get profile entry that does not exist', async () => {
+    const response = await request(app)
+      .get(`/profile/5de54a791383f8476e5aad29/`)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(404);
+    const body = JSON.parse(response.text);
+
+    assert.equal(body.message, 'Record not found!');
+  });
+
+  it('[getOne] get profile entry with invalid id', async () => {
+    const response = await request(app)
+      .get(`/profile/1/`)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(500);
+  });
+
   it('[getAll] get all profile entries from specific profile without detail', async () => {
     await addProfileEntry();
 

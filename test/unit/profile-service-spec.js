@@ -120,7 +120,7 @@ describe('Profile Service', () => {
   });
 
   it('[getOne] get profile entry with invalid id', async () => {
-    const response = await request(app)
+    await request(app)
       .get(`/profile/1/`)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)

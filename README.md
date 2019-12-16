@@ -120,3 +120,14 @@ First start the server then access  http://localhost:8080/docs/
 
   
 \* The profile service is originally from https://github.com/azweb76/node-test-api/
+
+Some of the things that have changed are as follows :
+* Added getBy endpoint
+* Added deleteAll endpoint
+* Removed updateDefaults endpoint
+* Removed getDefault endpoint
+* Removed releaseSession endpoint
+* Removed getSessionAll endpoint
+* releaseOne - increase use_cnt even if error
+* Added tests
+* Sanitize inputs

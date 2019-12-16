@@ -11,6 +11,19 @@ const sanitize = require('mongo-sanitize');
  *     description: Get all profile entries.
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: detail
+ *         description: id to return profile entry ids only. 1 to return all non-meta data as well.
+ *         in: query
+ *         required: false
+ *         type: string
+ *         example: "id or 1"
+ *       - name: locked
+ *         description: true to return all locked profile entries. false to return all non-locked profile entries
+ *         in: query
+ *         required: false
+ *         type: boolean
+ *         example: true
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
@@ -158,7 +171,7 @@ function getOne({ params }, res) {
 
 /**
  * @swagger
- * /profile/{name}/all?detail=1:
+ * /profile/{name}/all:
  *   get:
  *     tags:
  *       - Profiles
@@ -172,6 +185,12 @@ function getOne({ params }, res) {
  *         required: true
  *         type: string
  *         example: "test-profile"
+ *       - name: detail
+ *         description: Use any value to see the meta data of the profile entry
+ *         in: query
+ *         required: false
+ *         type: string
+ *         example: "1"
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.
@@ -263,6 +282,12 @@ function getNext({ params }, res) {
  *         required: true
  *         type: string
  *         example: "59764b5ac18f87ba0cd0bc9c"
+ *       - name: error
+ *         description: Use any value to increase the error_cnt for this profile entry
+ *         in: query
+ *         required: false
+ *         type: string
+ *         example: "1"
  *     responses:
  *       200:
  *        description: All OK! Route execution was successful and response was returned.

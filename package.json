@@ -14,7 +14,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongo-sanitize": "^1.0.1",
-    "mongoose": "^5.7.3",
+    "mongoose": "^5.13.20",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.1"
   },
